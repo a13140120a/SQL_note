@@ -1,75 +1,29 @@
-# docker 安裝(Centos7)
+# SQL
 
-* 反安裝舊版docker
-```js
-sudo yum remove docker \
-                  docker-client \
-                  docker-client-latest \
-                  docker-common \
-                  docker-latest \
-                  docker-latest-logrotate \
-                  docker-logrotate \
-                  docker-engine
-```
-
-* 安裝docker(centos7)  
-```js
-sudo curl -sSL https://get.docker.com | sh
-```
-* 安裝完成之後，需要重新開機  
-`reboot`
-* 啟動docker  
-```js
-sudo systemctl start docker
-sudo systemctl enable docker
-```
-* 安裝git  
-```js
-yum install git
-```
-* 安裝docker-compose  
-
-```js
-yum install epel-release
-```
-```js
-curl -L "https://github.com/docker/compose/releases/download/1.10.0/docker-compose-$(uname -
-s)-$(uname -m)" -o /usr/local/bin/docker-compose
-```
-* 更改權限
-```js
-chmod +x /usr/local/bin/docker-compose
-```
-* 將帳號加入 docker 群組
-```js
-sudo usermod -aG docker USERNAME
-```
-
-* 基本操作
-  * 列出所有的容器 ID
-  ```js
-  docker ps -aq
-  ```
-  * 停止所有的容器
-  ```js
-  docker stop $(docker ps -aq)
-  ```
-  * 删除所有的容器
-  ```js
-  docker rm $(docker ps -aq)
-  ```
-  * 删除所有的image
-  ```js
-  docker rmi $(docker images -q)
-  ```
-  * 複製文件
-  ```js
-  docker cp mycontainer:/opt/file.txt /opt/local/
-  docker cp /opt/local/file.txt mycontainer:/opt/
-  ```
-
-
-
+1. Primary Key & Foreign Key
+  * Primary Key: 
+    * 唯一且不重複
+    * 不一定每個表格都要有
+    * 資料量大時透過Primary Key 查詢會較快
+  * Foreign Key:  
+    * 參考另一個表格的Primary Key
+    * 定義Foreign Key的表格稱為Depent 或Child表格 
+    * 被參考(定義Primary Key)的表格則稱為Referenced 或Parent表格
+    
+2. Character Set & Collation
+  * Character Set:字元集(編碼)(ex:utf-8、big5...)
+  * Collation: 一個字元集，所有大小排序規則謂之Collation
+    * case sensitive(cs,大小寫區分)
+    * case insensitive(ci,大小寫不區分)
+    * 中文無法排序  
+3. 資料型態:
+|型態|大小|範圍（有符號）|範圍（無符號）|用途|
+| --- | --- | --- | --- |
+TINYINT	1 位元組	(-128，127)	(0，255)	小整數值
+SMALLINT	2 位元組	(-32 768，32 767)	(0，65 535)	大整數值
+MEDIUMINT	3 位元組	(-8 388 608，8 388 607)	(0，16 777 215)	大整數值
+INT或INTEGER	4 位元組	(-2 147 483 648，2 147 483 647)	(0，4 294 967 295)	大整數值
+BIGINT	8 位元組	(-9 233 372 036 854 775 808，9 223 372 036 854 775 807)	(0，18 446 744 073 709 551 615)	極大整數值
 
 
 
