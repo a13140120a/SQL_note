@@ -62,7 +62,8 @@
   |DATETIME|	8	|1000-01-01 00:00:00/9999-12-31 23:59:59	|YYYY-MM-DD HH:MM:SS|	混合日期和時間值|
   |TIMESTAMP|	4	|1970-01-01 00:00:00/2038-1-19 11:14:07|YYYY-MM-DD HH:MM:SS|混合日期和時間值，時間戳|
 
-
+  * 語法順序:  
+    * SELECT -> FROM -> WHERE -> GROUP BY -> HAVING -> ORDER BY
 
 
 
