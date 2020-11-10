@@ -1,5 +1,23 @@
 # SQL
 
+* Ubuntu MySQL設置:
+  ```js
+  sudo apt update  #更新apt套件
+  sudo apt install mysql-server  #下載
+  sudo systemctl status mysql    #啟動wserver
+  sudo mysql       # 進入mysql
+  ```
+  * 設定root密碼
+  ```js
+  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_passwd';
+  FLUSH PRIVILEGES;
+  ```
+  * 或新增用戶
+  ```js
+  GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
+  ```
+  
+
 1. Primary Key & Foreign Key
   * Primary Key: 
     * 唯一且不重複
