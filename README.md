@@ -12,6 +12,10 @@
   ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_passwd';
   FLUSH PRIVILEGES;
   ```
+  * 更改root密碼
+  ```js
+  mysql> SET PASSWORD = '123456';
+  ```
   * 或新增用戶
   ```js
   GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
