@@ -79,16 +79,27 @@
   mysql -u user dbname < something.sql -p
   ```
   * 載入`.txt` 檔: 
-  ```js
-  mysql -u user dbname -e "LOAD DATA LOCAL INFILE "path.txt" 
-  [replace | ignore] #替換或忽略primary key
-  INTO TABLE table_name 
-  FIELDS TERMINATED BY "分隔符號"
-  ENCLOSED BY "字串的括起字符，預設為雙引號"
-  ESCAPE BY "描述的轉義字符。預設的是反斜線"
-  LINES TERMINATED BY "換行符號"
-  IGNORE 1 LINES #忽略第一行(欄位名稱)
-  ```
+    * 先設定: 
+    ```JS
+    SET GLOBAL local_infile=1;
+    
+    #檢查
+    SHOW GLOBAL VARIABLES LIKE 'local_infile';
+    
+    #否則會出現錯誤
+    ERROR: Loading local data is disabled - this must be enabled on both the client and server sides
+    ```
+    * 參數: 
+    ```js
+    mysql -u user dbname -e "LOAD DATA LOCAL INFILE "path.txt" 
+    [replace | ignore] #替換或忽略primary key
+    INTO TABLE table_name 
+    FIELDS TERMINATED BY "分隔符號"
+    ENCLOSED BY "字串的括起字符，預設為雙引號"
+    ESCAPE BY "描述的轉義字符。預設的是反斜線"
+    LINES TERMINATED BY "換行符號"
+    IGNORE 1 LINES #忽略第一行(欄位名稱)
+    ```
 
 1. Primary Key & Foreign Key
   * Primary Key: 
