@@ -24,12 +24,21 @@
   mysql> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   ```
   
+  * 查詢user:
+  ```js
+  select user, host from mysql.user;
+  ```
+  * 刪除user
+  ```js
+  DROP USER 'newuser'@'%';
+  ```
+  
   * "%"代表任何ip都可以登入,IDENTIFIED BY [密碼]
   ```js
   mysql> CREATE USER 'newuser'@'%' IDENTIFIED BY 'mypasswd';
   ```
   
-  *  賦予權限(grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼'
+  *  賦予權限 (grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼')
   ```js
   mysql> GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
   ```
@@ -45,6 +54,14 @@
       ```js
       bind-address          = 127.0.0.1
                            (改成要接受連線的ip，如果想要允許任何人連線就註解掉)
+      ```
+    * 重啟
+      ```js
+      sudo /etc/init.d/mysql restart
+      ```
+    * 登入:
+      ```js
+      mysql -u root -p
       ```
   
 
