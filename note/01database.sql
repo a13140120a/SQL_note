@@ -13,6 +13,8 @@ ALTER DATABASE db02
 CHARACTER SET big5
 COLLATE big5_chinese_ci ;
 SELECT @@character_set_database,@@collation_database;
+SHOW COLUMNS FROM tbl_name;
+SHOW FULL COLUMNS FROM tbl_name;
 
 --     -----------------建立表格-----------
 CREATE TABLE employee(
