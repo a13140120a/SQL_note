@@ -91,10 +91,9 @@
     
 
     ```
-    * 再到/etc/mysql/ 底下編輯 my.cnf
+    * 修改 /etc/mysql/mysql.conf.d/mysqld.cnf 檔加上:
     ```js
-    # 如果沒有就自行加上
-    [mysqld]  #要有這行
+    [mysqld]  # 找到這個底下
     # 可讀取任何地方的檔案
     secure-file-priv= ""
     # 允許讀取本地端
