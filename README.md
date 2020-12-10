@@ -80,6 +80,10 @@
   mysql -u user dbname < something.sql -p
   ```
   * 載入`.txt` 檔: 
+    * 設定txt檔權限:
+    ```js
+    sudo chown mysql <filename>
+    ```
     * 先設定: 
     ```JS
     mysql> SET GLOBAL local_infile=1;
@@ -96,9 +100,11 @@
     * 再到/etc/mysql/ 底下編輯 my.cnf
     ```js
     # 如果沒有就自行加上
-    [mysqld]
+    [mysqld]  #要有這行
     # 可讀取任何地方的檔案
     secure-file-priv= ""
+    # 允許讀取本地端
+    local-infile=1
     
     #重啟後檢查
     mysql> SHOW VARIABLES LIKE "secure_file_priv";
