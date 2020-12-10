@@ -20,7 +20,7 @@
   mysql> SET PASSWORD = '123456';
   ```
   
-  * <p id="001">新增用戶<p>
+  * <p id="001">新增用戶<p>  
   ```js
   mysql> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   ```
@@ -47,6 +47,11 @@
   ```js
   mysql> CREATE USER 'newuser'@'%' IDENTIFIED BY 'mypasswd';
   ```
+  * 遇到問題: ERROR 1227 (42000): Access denied; you need (at least one of) the SYSTEM_USER privilege(s) for this operation:
+  ```JS
+  #預設root 沒有管理員權限，先創建新user 用此user 給root權限
+  GRANT system_user ON *.* TO root;
+  ```
   
   *  賦予權限 (grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼')
   ```js
@@ -55,7 +60,7 @@
   
   * 將所有 database 下的 table 都給予 newuser 所有權限
   ```js
-  update user set host='%' where user='root';
+  mysql> UPDATE user SET host='%' where user='root';
   mysql> GRANT ALL ON *.* TO 'newuser'@'%';
   ```
   * <p id="002">jdbc連線MySQL(version8以上): <p>  
