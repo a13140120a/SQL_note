@@ -23,10 +23,19 @@
   ```js
   mysql> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   ```
+  * 遇到問題:Your password does not satisfy the current policy requirements 代表密碼太短，解決:
+  ```js
+  MySQL內部
+  SET GLOBAL validate_password.length=1;
+  SET GLOBAL validate_password.policy=0;
+
+  #查詢設定:
+  SHOW VARIABLES LIKE 'validate_password%';
+  ```
   
   * 查詢user:
   ```js
-  select user, host from mysql.user;
+  SELECT user, host FROM mysql.user;
   ```
   * 刪除user
   ```js
