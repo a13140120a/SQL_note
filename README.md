@@ -56,7 +56,8 @@
   ```js
   mysql> GRANT ALL ON *.* TO 'newuser'@'%';
   ```
-  * <p id="002">jdbc連線MySQL(version8以上): <p>
+  * <p id="002">jdbc連線MySQL(version8以上): <p>  
+  
     * 下載官網JDK檔(官網-> connector/j -> platform independent)
 
     * 修改 /etc/mysql/mysql.conf.d/mysqld.cnf 檔:
