@@ -4,26 +4,48 @@
   ```js
   sudo apt update  #更新apt套件
   sudo apt install mysql-server  #下載
-  sudo systemctl status mysql    #啟動wserver
+  sudo systemctl status mysql    #查看server
   sudo mysql       # 進入mysql
   ```
+  
   * 設定root密碼
   ```js
   ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_passwd';
   FLUSH PRIVILEGES;
   ```
+  
   * 更改root密碼
   ```js
   mysql> SET PASSWORD = '123456';
   ```
-  * 新增用戶並賦予所有權限
-  ```js
-  #新增用戶
-  CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   
-  #賦予權限(grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼'
-  GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
+  * <p id="001">新增用戶<p>
+  ```js
+  mysql> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   ```
+  
+  * "%"代表任何ip都可以登入,IDENTIFIED BY [密碼]
+  ```js
+  mysql> CREATE USER 'newuser'@'%' IDENTIFIED BY 'mypasswd';
+  ```
+  
+  *  賦予權限(grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼'
+  ```js
+  mysql> GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
+  ```
+  
+  * 將所有 database 下的 table 都給予 newuser 所有權限
+  ```js
+  mysql> GRANT ALL ON *.* TO 'newuser'@'%';
+  ```
+  * <p id="002">jdbc連線MySQL(version8以上): <p>
+    * 下載官網JDK檔(官網-> connector/j -> platform independent)
+
+    * 修改 /etc/mysql/mysql.conf.d/mysqld.cnf 檔:
+      ```js
+      bind-address          = 127.0.0.1
+                           (改成要接受連線的ip，如果想要允許任何人連線就註解掉)
+      ```
   
 
 1. Primary Key & Foreign Key
