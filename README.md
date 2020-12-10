@@ -60,8 +60,15 @@
   
   * 將所有 database 下的 table 都給予 newuser 所有權限
   ```js
-  mysql> UPDATE user SET host='%' where user='root';
+  
   mysql> GRANT ALL ON *.* TO 'newuser'@'%';
+  ```
+  * 遇到問題ERROR 1410 (42000): You are not allowed to create a user with GRANT:
+  ```js
+  mysql> USE mysql;
+  mysql> UPDATE user SET host='%' where user='root';
+  
+  # 或者是根本沒有這個USER:MySQL 裡面要 USER 跟 HOST 才構成一個完整的USER ，"%" 不包含 "localhost"
   ```
   * <p id="002">jdbc連線MySQL(version8以上): <p>  
   
