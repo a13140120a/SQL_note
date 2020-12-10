@@ -22,10 +22,6 @@
   CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'newpassword';
   
   #賦予權限(grant 權限 on 資料庫對象.* to '用戶'@'ip地址' identified by '密碼'
-
-
-
-原文網址：https://kknews.cc/code/9ngvaz8.html)
   GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost' IDENTIFIED BY 'your_passwd';
   ```
   
