@@ -89,6 +89,12 @@
     #否則會出現錯誤
     ERROR: Loading local data is disabled - this must be enabled on both the client and server sides
     ```
+    * 再到/etc/mysql/ 底下編輯 my.cnf
+    ```js
+    # 如果沒有就自行加上
+    [mysqld]
+    secure-file-priv= "你想要讀取檔案的路徑"
+    ```
     * 參數: 
     ```js
     mysql -u user dbname -e "LOAD DATA LOCAL INFILE "path.txt" 
