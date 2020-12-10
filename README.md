@@ -81,10 +81,10 @@
   * 載入`.txt` 檔: 
     * 先設定: 
     ```JS
-    SET GLOBAL local_infile=1;
+    mysql> SET GLOBAL local_infile=1;
     
     #檢查
-    SHOW GLOBAL VARIABLES LIKE 'local_infile';
+    mysql> SHOW GLOBAL VARIABLES LIKE 'local_infile';
     
     #否則會出現錯誤
     ERROR: Loading local data is disabled - this must be enabled on both the client and server sides
@@ -94,6 +94,9 @@
     # 如果沒有就自行加上
     [mysqld]
     secure-file-priv= "你想要讀取檔案的路徑"
+    
+    #重啟後檢查
+    mysql> SHOW VARIABLES LIKE "secure_file_priv";
     ```
     * 參數: 
     ```js
