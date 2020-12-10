@@ -55,6 +55,7 @@
   
   * 將所有 database 下的 table 都給予 newuser 所有權限
   ```js
+  update user set host='%' where user='root';
   mysql> GRANT ALL ON *.* TO 'newuser'@'%';
   ```
   * <p id="002">jdbc連線MySQL(version8以上): <p>  
@@ -83,6 +84,9 @@
     ```JS
     mysql> SET GLOBAL local_infile=1;
     
+    #賦予權限
+    GRANT ALL ON *.* TO '你的username'@'%';
+    
     #檢查
     mysql> SHOW GLOBAL VARIABLES LIKE 'local_infile';
     
@@ -93,7 +97,8 @@
     ```js
     # 如果沒有就自行加上
     [mysqld]
-    secure-file-priv= "你想要讀取檔案的路徑"
+    # 可讀取任何地方的檔案
+    secure-file-priv= ""
     
     #重啟後檢查
     mysql> SHOW VARIABLES LIKE "secure_file_priv";
