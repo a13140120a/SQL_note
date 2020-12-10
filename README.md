@@ -1,12 +1,13 @@
 # SQL
 
-* Ubuntu MySQL設置:
-  ```js
-  sudo apt update  #更新apt套件
-  sudo apt install mysql-server  #下載
-  sudo systemctl status mysql    #查看server
-  sudo mysql       # 進入mysql
-  ```
+* Ubuntu MySQL:
+  * 下載:
+    ```js
+    sudo apt update  #更新apt套件
+    sudo apt install mysql-server  #下載
+    sudo systemctl status mysql    #查看server
+    sudo mysql       # 進入mysql
+    ```
   
   * 設定root密碼
   ```js
@@ -73,7 +74,21 @@
       ```js
       mysql -u root -p
       ```
-  
+  * bash shell 載入`.sql` 檔:
+  ```js
+  mysql -u user dbname < something.sql -p
+  ```
+  * 載入`.txt` 檔: 
+  ```js
+  mysql -u user dbname -e "LOAD DATA LOCAL INFILE "path.txt" 
+  [replace | ignore] #替換或忽略primary key
+  INTO TABLE table_name 
+  FIELDS TERMINATED BY "分隔符號"
+  ENCLOSED BY "字串的括起字符，預設為雙引號"
+  ESCAPE BY "描述的轉義字符。預設的是反斜線"
+  LINES TERMINATED BY "換行符號"
+  IGNORE 1 LINES #忽略第一行(欄位名稱)
+  ```
 
 1. Primary Key & Foreign Key
   * Primary Key: 
