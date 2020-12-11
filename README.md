@@ -70,7 +70,7 @@
   
   # 或者是根本沒有這個USER:MySQL 裡面要 USER 跟 HOST 才構成一個完整的USER ，"%" 不包含 "localhost"
   ```
-  * <p id="002">jdbc連線MySQL(version8以上): <p>  
+  * <p id="002">JDBC連線MySQL(version8以上): <p>  
   
     * 下載官網JDK檔(官網-> connector/j -> platform independent)
 
