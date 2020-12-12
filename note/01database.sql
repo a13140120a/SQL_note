@@ -16,6 +16,8 @@ SELECT @@character_set_database,@@collation_database;
 SHOW COLUMNS FROM tbl_name;
 SHOW FULL COLUMNS FROM tbl_name;
 
+SHOW VARIABLES LIKE "collation_%"; -- 查看編碼
+
 --     -----------------建立表格-----------
 CREATE TABLE employee(
 	empno	  decimal(4)	  PRIMARY KEY,
