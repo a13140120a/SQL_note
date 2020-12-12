@@ -130,6 +130,11 @@
     LINES TERMINATED BY "換行符號"
     IGNORE 1 LINES #忽略第一行(欄位名稱)
     ```
+    * 遇到問題: ERROR 2068 (HY000) at line 1: LOAD DATA LOCAL INFILE file request rejected due to restrictions on access.
+    ```js
+    #啟動時加上參數
+    --local-infile=1
+    ```
 
 1. Primary Key & Foreign Key
   * Primary Key: 
