@@ -62,7 +62,7 @@ UPDATE emp_copy
 SET deptno = (SELECT deptno
               FROM employee
               WHERE empno = 1003)
-WHERE salary = (SELECT deptno
+WHERE salary = (SELECT salary
               FROM employee
               WHERE empno = 1001);
               
