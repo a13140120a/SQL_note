@@ -6,12 +6,13 @@ USE db01; -- ---------------------------SWITCH
 SHOW CHARSET;
 SHOW COLLATION;
 CREATE SCHEMA `db03` DEFAULT CHARACTER SET big5;
-
+-- -------------顯示編碼
 SHOW COLLATION LIKE 'big5%';
-
+-- --------------修改編碼
 ALTER DATABASE db02
 CHARACTER SET big5
 COLLATE big5_chinese_ci ;
+-- --------------查看編碼
 SELECT @@character_set_database,@@collation_database;
 SHOW COLUMNS FROM tbl_name;
 SHOW FULL COLUMNS FROM tbl_name;
