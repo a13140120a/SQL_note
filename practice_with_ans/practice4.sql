@@ -49,6 +49,8 @@ SELECT EMPNO,ENAME,SAL,ROUND(SAL*1.15,0)'New Salary' FROM emp;
 SELECT EMPNO,ENAME,SAL,ROUND(SAL*1.15,0)'New Salary',ROUND(SAL*1.15,0)-SAL'Increase' FROM emp;
 -- 22.	顯示員工的姓名,進公司日期,檢討薪資的日期(指在進公司工作六個月後的第一個星期一)，將該欄命名為 REVIEW，
 -- 並自訂日期格式為：Sunday, the Seventh of September。(星期幾， 幾月幾日)。
+SELECT ename, hiredate,date_format(hiredate,"%W,the %D of %M")`REVIEW` FROM emp;
+-- 多此一舉的 CASE WHEN 寫法
 SELECT ename, hiredate,date_format(
  CASE
   WHEN DAYOFWEEK(hiredate + INTERVAL 6 MONTH) = 3 THEN hiredate + INTERVAL 6 MONTH + INTERVAL 6 DAY
@@ -76,10 +78,12 @@ SELECT ENAME,HIREDATE,date_format(HIREDATE,"%W")'DAY' FROM emp ORDER BY  CASE
 		WHEN DAYOFWEEK(hiredate) = 7 THEN 6
         WHEN DAYOFWEEK(hiredate) = 1 THEN 7
         END;
--- 或者 
-SELECT ENAME,HIREDATE, (DAYOFWEEK(hiredate)-1) % 7`DAY` FROM emp ORDER BY DAY;
+-- 或者
+SELECT ENAME,HIREDATE,date_format(HIREDATE,"%W")'DAY' FROM emp ORDER BY (date_format(HIREDATE, "%w")+6) % 7;
 -- 27.	顯示員工的姓名和名為COMM的欄位:顯示佣金額，如果該員工沒有賺取佣金則顯示"No Commission."
 SELECT ENAME, IF (IF (COMM IS NULL,"No Commission.",COMM) = 0 , "No Commission.",COMM) FROM emp;
+-- 或者(較簡潔)
+SELECT ENAME, IF (COMM IS NULL OR COMM = 0,"No Commission.",COMM) FROM emp;
 -- 28.	顯示資料項命名為 EMPLOYEE_AND_THEIR_SALARIES 的資料來顯示所有員工之名字和薪資，且用星號來表示他們的薪資，
 -- 每一個星號表示100元，並以薪資由高到低來顯示。
 SELECT CONCAT(ENAME,REPEAT('*', ROUND(SAL/100)))'EMPLOYEE_AND_THEIR_SALARIES' FROM emp;
@@ -94,18 +98,21 @@ SELECT JOB,COUNT(JOB) FROM emp GROUP BY JOB;
 SELECT COUNT(DISTINCT MGR)'Number of Managers' FROM emp; 
 -- 33.	顯示資料項命名為DIFFERENCE的資料來表示公司中最高和最低薪水間的差額。
 SELECT MAX(SAL)-MIN(SAL)'DIFFERENCE' FROM emp;
--- 34.	顯示每位主管的員工編號及該主管下屬員工最低的薪資，排除沒有主管和下屬員工最低薪資少於1000的主管，
+-- 34.	顯示每位主管的員工編號及該主管下屬員工最低的薪資，排除沒有主管和下屬員工最低薪資大於1000的主管，
 -- 並以下屬員工最低薪資作降冪排列。
 SELECT MGR,MIN(SAL) FROM emp WHERE SAL > 1000 AND MGR IS NOT NULL GROUP BY MGR;
 
 -- 35.	顯示在1980,1981,1982,1983年進公司的員工數量，並給該資料項一個合適的名稱。
-SELECT COUNT(HIREDATE) FROM emp WHERE hiredate BETWEEN "1980-01-01" AND "1983-12-31";
+SELECT COUNT(HIREDATE) FROM emp WHERE hiredate BETWEEN "1980-01-01" AND "1983-12-31";  -- 沒有 GROUP BY?
+-- 分別顯示在1980,1981,1982,1983年進公司的員工數量，
+SELECT YEAR(HIREDATE)`year_hire_date`, COUNT(*)`COUNT` FROM EMP GROUP BY year_hire_date HAVING year_hire_date IN ("1980", "1981", "1982", "1983");
 -- // join練習
 -- 36.	顯示所有員工之姓名,所屬部門編號,部門名稱及部門所在地點。
-SELECT e.ename,e.deptno,d.dname,d.loc FROM emp e JOIN dept d ON e.deptno = d.deptno;
+SELECT e.ename,e.deptno,d.dname,d.loc FROM emp e JOIN dept d ON e.deptno = d.deptno; -- ON e.deptno = d.deptno 可省略，但標準寫法是不省略
 SELECT e.ename,e.deptno,d.dname,d.loc FROM emp e, dept d WHERE e.deptno = d.deptno; 
 -- 37.	顯示所有有賺取佣金的員工之姓名,佣金金額,部門名稱及部門所在地點。
-SELECT e.ename, e.comm, d.dname, d.loc FROM emp e, dept d WHERE e.deptno = d.deptno AND e.comm IS NOT NULL AND e.comm != 0; 
+SELECT e.ename, e.comm, d.dname, d.loc FROM emp e, dept d WHERE e.deptno = d.deptno AND e.comm IS NOT NULL AND e.comm <> 0; -- != 為不標準寫法
+SELECT e.ename, e.comm, d.dname, d.loc FROM emp e JOIN dept d ON e.deptno = d.deptno WHERE e.comm IS NOT NULL AND e.comm <> 0; -- != 為不標準寫法
 -- 38.	顯示姓名中包含有”A”的員工之姓名及部門名稱。
 SELECT e.ename,d.dname FROM emp e JOIN dept d ON e.deptno = d.deptno WHERE ename LIKE "%A%";
 -- 39.	顯示所有在”DALLAS”工作的員工之姓名,職稱,部門編號及部門名稱
@@ -113,51 +120,45 @@ SELECT e.ename,e.job,d.deptno,d.dname FROM emp e JOIN dept d ON e.deptno = d.dep
 -- 40.	顯示出表頭名為: Employee, Emp#, Manager, Mgr#，分別表示所有員工之姓名,員工編號,主管姓字, 主管的員工編號。
 SELECT e.ename'Employee',e.empno'Emp#',m.ename'Manager',m.empno'Mgr#' FROM emp e,emp m WHERE e.MGR = m.empno;
 -- 41.	顯示出SALGRADE資料表的結構，並建立一查詢顯示所有員工之姓名,職稱,部門名稱,薪資及薪資等級。
-SELECT e.ename,e.job,d.dname,e.salary,s.grade FROM emp e ,dept d ,salgrade s WHERE e.deptno = d.dpptno;
+SELECT e.ename'Employee',e.hiredate'Emp Hiredate',m.ename'Manager',m.hiredate'Mgr Hiredate' FROM emp e JOIN emp m ON e.sal BETWEEN s.losal AND hisal;
 -- 42.	顯示出表頭名為: Employee, Emp Hiredate, Manager, Mgr Hiredate的資料項，
 -- 來顯示所有比他的主管還要早進公司的員工之姓名,進公司日期和主管之姓名及進公司日期。
 SELECT e.ename'Employee',e.hiredate'Emp Hiredate',m.ename'Manager',m.hiredate'Mgr Hiredate' FROM emp e JOIN emp m ON e.MGR = m.empno 
 WHERE e.hiredate < m.hiredate;
--- 43.	顯示出表頭名為: dname, loc, Number of People, Salary的資料來顯示所有部門之部門名稱,
+-- 43.	顯示出表頭名為: dname, loc, Number of People, Salary 的資料來顯示所有部門之部門名稱,
 -- 部門所在地點,部門員工數量及部門員工的平均薪資，平均薪資四捨五入取到小數第二位。
 SELECT d.dname'dname',d.loc'loc',COUNT(e.empno)'Number of People',ROUND(AVG(e.sal))'Salary' FROM emp e RIGHT JOIN dept d ON e.deptno = d.deptno GROUP BY d.deptno; 
 -- // subquery練習
--- 44.	顯示和Blake同部門的所有員工之姓名和進公司日期。
+-- 44.	顯示和 Blake 同部門的所有員工之姓名和進公司日期。
 SELECT ename,hiredate FROM emp WHERE deptno = (SELECT deptno FROM emp WHERE ename = 'Blake');
 -- 45.	顯示所有在Blake之後進公司的員工之姓名及進公司日期。
 SELECT ename,hiredate FROM emp WHERE hiredate > (SELECT hiredate FROM emp WHERE ename = 'Blake');
 -- 46.	顯示薪資比公司平均薪資高的所有員工之員工編號,姓名和薪資，並依薪資由高到低排列。
 SELECT empno,ename,sal FROM emp WHERE sal > (SELECT AVG(sal) FROM EMP) ORDER BY SAL DESC;
--- 47.	顯示和姓名中包含 T 的人再相同部門工作的所有員工之員工編號和姓名。
+-- 47.	顯示和姓名中包含 T 的人在相同部門工作的所有員工之員工編號和姓名。
 SELECT empno,ename FROM emp WHERE deptno IN (SELECT deptno FROM emp WHERE ename LIKE "%T%" );
 -- 48.	顯示在Dallas工作的所有員工之姓名, 部門編號和職稱。
 SELECT e.ename, d.deptno, e.job FROM emp e,dept d where e.deptno = d.deptno AND d.loc = 'Dallas'; 
+-- 這裡使用 subquery 的寫法是
+    SELECT e.ename, d.deptno, e.job FROM emp e JOIN dept d ON e.deptno = d.deptno WHERE (SELECT deptno FROM dept WHERE loc = "Dallas"); 
 -- 49.	顯示直屬於”King”的員工之姓名和薪資。
 SELECT ename, sal FROM emp WHERE mgr = (SELECT empno FROM emp WHERE ename = 'King');
 -- 50.	顯示銷售部門”Sales” 所有員工之部門編號,姓名和職稱。
 SELECT e.deptno, e.ename, e.job FROM emp e, dept d WHERE e.deptno = d.deptno AND d.dname='Sales';
+-- 這裡使用 subquery 的寫法是
+    SELECT e.deptno, e.ename, e.job FROM emp e JOIN dept d ON e.deptno = d.deptno WHERE d.dname = (SELECT dname FROM dept WHERE dname = "Sales");
 -- 51.	顯示薪資比公司平均薪資還要高且和名字中有 T 的人在相同部門上班的所有員工之員工編號,姓名和薪資。
-SELECT empno, ename, sal FROM emp WHERE deptno in (SELECT deptno FROM emp 
-													WHERE ename LIKE "%T%")
-								  AND sal > (SELECT AVG(sal) FROM emp);
+SELECT empno, ename, sal FROM emp WHERE deptno in (SELECT deptno FROM emp WHERE ename LIKE "%T%") AND sal > (SELECT AVG(sal) FROM emp);
 -- 52.	顯示和有賺取佣金的員工之部門編號和薪資都相同的員工之姓名,部門編號和薪資。
-SELECT ename, deptno, sal FROM emp WHERE deptno IN (SELECT deptno FROM emp 
-													WHERE comm IS NOT NULL
-													AND comm != 0)
-								   AND sal IN (SELECT sal FROM emp 
-													WHERE comm IS NOT NULL
-													AND comm != 0);
+SELECT ename, deptno, sal FROM emp WHERE deptno IN (SELECT deptno FROM emp WHERE comm IS NOT NULLAND comm != 0)
+AND sal IN (SELECT sal FROM emp WHERE comm IS NOT NULL AND comm != 0);
 -- 53.	顯示和在Dallas工作的員工之薪資和佣金都相同的員工之姓名,部門編號和薪資。
-SELECT e.ename, e.deptno,e.sal FROM emp e
-                                 WHERE e.sal IN (SELECT e.sal FROM emp e JOIN dept d 
-								                 ON e.deptno = d.deptno  
-												 WHERE d.loc = 'Dallas')
-								   AND IFNULL(e.comm,0) IN (SELECT IFNULL(e.comm,0) FROM emp e JOIN dept d 
-												  ON e.deptno = d.deptno  
-												  WHERE d.loc = 'Dallas');
+SELECT e.ename, e.deptno,e.sal FROM emp e WHERE e.sal IN 
+(SELECT e.sal FROM emp e JOIN dept d ON e.deptno = d.deptno  WHERE d.loc = 'Dallas')AND 
+IFNULL(e.comm,0) IN (SELECT IFNULL(e.comm,0) FROM emp e JOIN dept d ON e.deptno = d.deptno  WHERE d.loc = 'Dallas');
 -- 54.	顯示薪資和佣金都和Scott相同的所有員工之姓名,進公司日期和薪資。(不要在結果中顯示Scott的資料)
 SELECT ename, hiredate, sal FROM emp WHERE sal = (SELECT sal FROM emp WHERE ename = 'Scott')
                                      AND IFNULL(comm,0) IN (SELECT IFNULL(comm,0) FROM emp);
 -- 55.	顯示薪資比所有職稱是”Clerk”還高的員工之姓名,進公司日期和薪資，並將結果依薪資由高至低顯示。
-SELECT ename, hiredate, sal FROM emp WHERE sal < ANY(SELECT sal FROM emp WHERE job = "Clerk")
+SELECT ename, hiredate, sal FROM emp WHERE sal < ALL(SELECT sal FROM emp WHERE job = "Clerk")
 ORDER BY sal DESC;
