@@ -76,6 +76,8 @@ SELECT ENAME,HIREDATE,date_format(HIREDATE,"%W")'DAY' FROM emp ORDER BY  CASE
 		WHEN DAYOFWEEK(hiredate) = 7 THEN 6
         WHEN DAYOFWEEK(hiredate) = 1 THEN 7
         END;
+-- 或者 
+SELECT ENAME,HIREDATE, (DAYOFWEEK(hiredate)-1) % 7`DAY` FROM emp ORDER BY DAY;
 -- 27.	顯示員工的姓名和名為COMM的欄位:顯示佣金額，如果該員工沒有賺取佣金則顯示"No Commission."
 SELECT ENAME, IF (IF (COMM IS NULL,"No Commission.",COMM) = 0 , "No Commission.",COMM) FROM emp;
 -- 28.	顯示資料項命名為 EMPLOYEE_AND_THEIR_SALARIES 的資料來顯示所有員工之名字和薪資，且用星號來表示他們的薪資，
