@@ -63,12 +63,8 @@ CREATE TABLE emp LIKE employee;
 		price 			int unsigned 	NOT NULL,
 		catelog 		varchar(20) 	NOT NULL);
 
-drop table food;
-
 CREATE TABLE `place`(
 	`id` CHAR(2) NOT NULL,
-    `name` VARCHAR(20) NULL,
-    PRIMARY KEY(`id`));
-    
-CREATE TABLE food1 LIKE food;
+        `name` VARCHAR(20) NULL,
+        PRIMARY KEY(`id`));
 
