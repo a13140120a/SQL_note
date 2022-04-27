@@ -1,3 +1,16 @@
+ CREATE TABLE db01.food (
+		id 				char(5) 		PRIMARY KEY,
+		`name`  			varchar(30)  	NOT NULL,
+		expiredate 		datetime 		NOT NULL,
+		placeid 		char(2) 		NOT NULL,
+		price 			int unsigned 	NOT NULL,
+		catelog 		varchar(20) 	NOT NULL);
+
+CREATE TABLE `place`(
+	`id` CHAR(2) NOT NULL,
+        `name` VARCHAR(20) NULL,
+        PRIMARY KEY(`id`));
+
 INSERT INTO food VALUES ('CK001', '曲奇餅乾', '2017/01/10', 'TL', 250, '點心');
 INSERT INTO food VALUES ('CK002', '蘇打餅乾', '2020/10/12', 'TW', 80, '點心');
 INSERT INTO food VALUES ('DK001', '高山茶', '2021/05/23', 'TW', 780, '飲料');
