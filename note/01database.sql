@@ -53,18 +53,3 @@ drop table tt1;
 
 CREATE TABLE emp LIKE employee;
 
--- -----------------作業--------------------
-
- CREATE TABLE db01.food (
-		id 				char(5) 		PRIMARY KEY,
-		`name`  			varchar(30)  	NOT NULL,
-		expiredate 		datetime 		NOT NULL,
-		placeid 		char(2) 		NOT NULL,
-		price 			int unsigned 	NOT NULL,
-		catelog 		varchar(20) 	NOT NULL);
-
-CREATE TABLE `place`(
-	`id` CHAR(2) NOT NULL,
-        `name` VARCHAR(20) NULL,
-        PRIMARY KEY(`id`));
-
