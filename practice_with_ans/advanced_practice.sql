@@ -47,7 +47,9 @@ JOIN
          SUM(Amt)`sum` 
      FROM 
          Fact_Order 
-     GROUP BY DATE_FORMAT(Order_date,"%Y"), Dept_id)`t` 
+     GROUP BY 
+         DATE_FORMAT(Order_date,"%Y"), Dept_id
+    )`t` 
 ON 
     s.Year = t.Year AND s.Dept_id = t.Dept_id 
 SET 
