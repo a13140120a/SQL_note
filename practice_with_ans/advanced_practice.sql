@@ -37,6 +37,7 @@ INSERT INTO SS_Order VALUES (2019, 3102, 0);
 INSERT INTO SS_Order VALUES (2019, 3103, 0);
 INSERT INTO SS_Order VALUES (2019, 3104, 0);
 
+-- UPDATE JOIN
 -- 請將銷售明細表(Fact_Order)資料，依各部門(Dept_id)+年度統計(Year)訂單金額更新至銷售彙總表(SS_Order)
 UPDATE 
     SS_Order s INNER 
@@ -133,7 +134,7 @@ CASE Store_Name
 Txn_Date
 FROM Store_Information;
 -- 7. 取得每一個區域(region_name)的總營業額(sales)
-
+SELECT g.Region_Name, SUM(s.Sales) FROM Store_Information s JOIN Geography g ON s.Store_Name = g.Store_Name GROUP BY Region_Name;
 -- 8. 取得每一個區域(region_name)的總營業額與每個商店(store_name)的總營業額的百分比(region_name/store_name X 100%)
 
 
