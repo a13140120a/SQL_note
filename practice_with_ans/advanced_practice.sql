@@ -53,7 +53,7 @@ JOIN
 ON 
     s.Year = t.Year AND s.Dept_id = t.Dept_id 
 SET 
-    s.Amt=sum 
+    s.Amt=t.sum 
 WHERE 
     s.Year=t.Year AND s.Dept_id=t.Dept_id;
 
