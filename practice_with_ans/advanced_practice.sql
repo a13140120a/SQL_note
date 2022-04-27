@@ -1,3 +1,63 @@
+CREATE TABLE IF NOT EXISTS Fact_Order(
+        Order_num   VARCHAR(15),
+        Order_date  DATE,
+        Order_type  CHAR(1),
+        Dept_id     INT,
+        Unit_price  INT,
+        Qty         INT,
+        Amt         INT
+);
+
+CREATE TABLE IF NOT EXISTS SS_Order(
+        Year        INT,
+        Dept_id     INT,
+        Amt         INT
+);
+
+INSERT INTO Fact_Order VALUES ('AQ20170700001', '2017-05-21', 'A', 3103, 400, 2, 800);
+INSERT INTO Fact_Order VALUES ('AQ20170700002', '2018-05-21', 'A', 3104, 820, 2, 1640);
+INSERT INTO Fact_Order VALUES ('AQ20170700003', '2017-05-21', 'B', 3101, 399, 1, 399);
+INSERT INTO Fact_Order VALUES ('AQ20170700004', '2017-05-21', 'C', 3104, 359, 3, 1077);
+INSERT INTO Fact_Order VALUES ('AQ20170700005', '2018-05-21', 'C', 3101, 359, 3, 1077);
+INSERT INTO Fact_Order VALUES ('AQ20170700006', '2019-05-21', 'C', 3102, 359, 3, 1077);
+INSERT INTO Fact_Order VALUES ('AQ20170700007', '2019-05-21', 'B', 3102, 359, 3, 1077);
+INSERT INTO Fact_Order VALUES ('AQ20170700008', '2019-05-21', 'A', 3103, 400, 2, 800);
+
+
+INSERT INTO SS_Order VALUES (2017, 3101, 0);
+INSERT INTO SS_Order VALUES (2017, 3102, 0);
+INSERT INTO SS_Order VALUES (2017, 3103, 0);
+INSERT INTO SS_Order VALUES (2017, 3104, 0);
+INSERT INTO SS_Order VALUES (2018, 3101, 0);
+INSERT INTO SS_Order VALUES (2018, 3102, 0);
+INSERT INTO SS_Order VALUES (2018, 3103, 0);
+INSERT INTO SS_Order VALUES (2018, 3104, 0);
+INSERT INTO SS_Order VALUES (2019, 3101, 0);
+INSERT INTO SS_Order VALUES (2019, 3102, 0);
+INSERT INTO SS_Order VALUES (2019, 3103, 0);
+INSERT INTO SS_Order VALUES (2019, 3104, 0);
+
+-- 請將銷售明細表(Fact_Order)資料，依各部門(Dept_id)+年度統計(Year)訂單金額更新至銷售彙總表(SS_Order)
+UPDATE 
+    SS_Order s INNER 
+JOIN 
+    (SELECT 
+         DATE_FORMAT(Order_date, "%Y")`Year`, 
+         ANY_VALUE(Dept_id)`Dept_id`, 
+         SUM(Amt)`sum` 
+     FROM 
+         Fact_Order 
+     GROUP BY DATE_FORMAT(Order_date,"%Y"), Dept_id)`t` 
+ON 
+    s.Year = t.Year AND s.Dept_id = t.Dept_id 
+SET 
+    s.Amt=sum 
+WHERE 
+    s.Year=t.Year AND s.Dept_id=t.Dept_id;
+
+
+-- -------------------------------------------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS Store_Information(
         Store_Name  VARCHAR(20),
         Sales       INT,
@@ -6,6 +66,11 @@ CREATE TABLE IF NOT EXISTS Store_Information(
 CREATE TABLE IF NOT EXISTS Internet_Sales(
         Txn_Date    DATE,
         Sales       INT
+);
+
+CREATE TABLE IF NOT EXISTS Geography(
+        Region_Name VARCHAR(20),
+        Store_Name  VARCHAR(20)
 );
 
 INSERT INTO Store_Information VALUES ('Los Angeles', 1500, '1999-01-05');
@@ -17,6 +82,11 @@ INSERT INTO Internet_Sales VALUES ('1999-01-07', 250);
 INSERT INTO Internet_Sales VALUES ('1999-01-10', 535);
 INSERT INTO Internet_Sales VALUES ('1999-01-11', 320);
 INSERT INTO Internet_Sales VALUES ('1999-01-12', 750);
+
+INSERT INTO Geography VALUES ('East', 'Boston');
+INSERT INTO Geography VALUES ('East', 'New York');
+INSERT INTO Geography VALUES ('West', 'Los Angeles');
+INSERT INTO Geography VALUES ('West', 'San Diego');
 
 
 -- 1. 找出所有有營業額 (Sales) 的日子
@@ -60,6 +130,10 @@ CASE Store_Name
 "New Sales",
 Txn_Date
 FROM Store_Information;
+-- 7. 取得每一個區域(region_name)的總營業額(sales)
+
+-- 8. 取得每一個區域(region_name)的總營業額與每個商店(store_name)的總營業額的百分比(region_name/store_name X 100%)
+
 
 
 
