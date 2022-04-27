@@ -76,15 +76,22 @@ SELECT name,price,ROUND(price*1.05)'New Price' FROM food;
 SELECT name,price,ROUND(price*1.05)'New Price',ROUND(price*1.05)-price 'Increase' FROM food;
 -- 21.	顯示所有食物名稱、價格和整數後的價格，新價格並將表頭命名為'New Price'；
 -- 按價格分250以下、251~500和501以上三種分別增加8%,5%和3%且價格無條件捨去成整數
-SELECT name,price,
-CASE 
-WHEN price <=250 THEN price*1.08
-WHEN price BETWEEN 251 AND 500 THEN price*1.05
-WHEN price >500 THEN price*1.03
-END'New Price' FROM food;
+SELECT 
+    name,price,
+    CASE 
+	WHEN price <=250 
+	    THEN price*1.08
+	WHEN price BETWEEN 251 AND 500 
+	    THEN price*1.05
+	WHEN price >500 
+	    THEN price*1.03
+    END'New Price' 
+FROM food;
 -- 22.	查詢所有食物名稱、種類、距離今天尚有幾天到期(正數表示)或已過期幾天(負數表示)
 -- 和註記(有'已過期'或'未過期'兩種)，並將後兩者表頭分別命名為'Days of expired'和'expired or not'
-SELECT name,catelog ,IF(EXPIREDATE-NOW() < 0,'已過期','未過期')'expired or not',DATEDIFF(EXPIREDATE,CURDATE())'Days of expire' FROM food;
+SELECT name,catelog ,IF(EXPIREDATE-NOW() < 0,'已過期','未過期')'expired or not',
+       DATEDIFF(EXPIREDATE,CURDATE())'Days of expire' 
+FROM food;
 -- 23.	接續上題，並以過期天數做升冪排序
 SELECT name,catelog ,IF(EXPIREDATE-NOW() < 0,'已過期','未過期')'expired or not',
 DATEDIFF(EXPIREDATE,CURDATE()) 'Days of expire'
@@ -93,12 +100,22 @@ ORDER BY DATEDIFF(EXPIREDATE,CURDATE());
 
 -- - GROUP BY & HAVING子句
 -- 24.	查詢所有食物最高、最低、加總和平均價格，表頭分別命名為'Max'、'Min'、'Sum'和'Avg'，結果皆以四捨五入的整數來顯示
-SELECT ROUND(MAX(price))'max',ROUND(MIN(price))'min',ROUND(SUM(price))'sum',ROUND(AVG(price))'AVG'
+SELECT 
+    ROUND(MAX(price))'max',
+    ROUND(MIN(price))'min',
+    ROUND(SUM(price))'sum',
+    ROUND(AVG(price))'AVG' 
 FROM food;
 -- 25.	接續上題，查詢每個種類
-SELECT catelog,ROUND(MAX(price))'max',ROUND(MIN(price))'min',ROUND(SUM(price))'sum',ROUND(AVG(price))'AVG'
-FROM food
-GROUP BY  catelog;
+SELECT 
+    catelog,ROUND(MAX(price))'max',
+    ROUND(MIN(price))'min',
+    ROUND(SUM(price))'sum',
+    ROUND(AVG(price))'AVG' 
+FROM 
+    food
+GROUP BY  
+    catelog;
 -- 26.	接續上題，查詢每個種類且平均價格超過300，並以平均價格做降冪排序
 SELECT catelog,ROUND(AVG(price))'AVG'
 FROM food
@@ -112,3 +129,123 @@ GROUP BY catelog;
 SELECT placeid'產地',catelog,COUNT(catelog)'count'
 FROM food
 GROUP BY catelog,placeid;
+
+-- --------------------------------------------------------------------------------------------------------------------------------------
+SELECT * FROM place;
+-- 1.	查詢所有食物名稱、產地編號、產地名稱和價格
+SELECT food.name,food.price,place.id,place.name
+FROM food JOIN place
+on food.placeid = place.id;
+-- 2.	查詢所有食物名稱和產地名稱，並串接成一個字串，中間以空白隔開，並將表頭重新命為'Food name & place'
+SELECT concat(food.name,' ',place.name)'Food name & place'
+FROM food JOIN place
+on food.placeid = place.id;
+-- 3.	查詢所有'台灣'生產的食物名稱和價格
+SELECT food.name,food.price,place.name
+FROM food JOIN place
+WHERE food.placeid = place.id
+AND place.name ='台灣' ;
+-- 4.	查詢所有'台灣'和'日本'生產的食物名稱和價格，並以價格做降冪排序
+SELECT food.name,food.price,place.name
+FROM food JOIN place
+WHERE food.placeid = place.id
+AND place.name IN('台灣','日本')
+ORDER BY food.price DESC;
+-- 5.	查詢前三個價格最高且'台灣'生產的食物名稱、到期日和價格，並以價格做降冪排序
+SELECT food.name,food.price,place.name
+FROM food JOIN place
+ON food.placeid = place.id
+WHERE place.name ='台灣' 
+ORDER BY food.price DESC
+LIMIT 3;
+-- 6.	查詢每個產地(顯示產地名稱)最高、最低、加總和平均價格，表頭分別命名為'Max'、'Min'、'Sum'和'Avg'，
+-- 結果皆以四捨五入的整數來顯示
+SELECT place.name,ROUND(MAX(food.price))'MAX',ROUND(MIN(food.price))'MIN',ROUND(SUM(food.price))'SUM',ROUND(AVG(food.price))'AVG'
+FROM food JOIN place
+on food.placeid = place.id
+GROUP BY place.name;
+-- 7.	查詢不同產地(顯示產地名稱)和每個種類的食物數量
+SELECT place.name,COUNT(catelog)'種類食物數量' 
+FROM 
+    food JOIN place
+ON 
+    food.placeid = place.id
+GROUP BY place.name,catelog;
+-- --------------------------------------------------------------------------------------------------------------------------------------
+
+-- 1.	查詢所有比'鳳梨酥'貴的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food
+WHERE price > (SELECT price
+               FROM food
+               WHERE name = '鳳梨酥');
+
+-- 2.	查詢所有比'曲奇餅乾'便宜且種類是'點心'的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food
+WHERE price < (SELECT price
+               FROM food
+               WHERE name = '曲奇餅乾')
+AND catelog = '點心';
+-- 3.	查詢所有和'鳳梨酥'同一年到期的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food
+WHERE YEAR(expiredate) = (SELECT YEAR(expiredate)
+					FROM food
+					WHERE name = '鳳梨酥');
+-- 4.	查詢所有比平均價格高的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food
+WHERE price > (SELECT AVG(price)
+               FROM food);
+-- 5.	查詢所有比平均價格低的'台灣'食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food
+WHERE 
+    price < (SELECT AVG(price) FROM food)
+AND placeid = 'TW';
+-- 6.	查詢所有種類和'仙貝'相同且價格比'仙貝'便宜的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food 
+WHERE catelog = (SELECT catelog 
+             FROM food 
+             WHERE name = '仙貝')
+AND price < (SELECT price 
+             FROM food 
+             WHERE name = '仙貝');
+-- 7.	查詢所有產地和'仙貝'相同且過期超過6個月以上的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food 
+WHERE placeid = (SELECT placeid 
+             FROM food 
+             WHERE name = '仙貝')
+AND DATEDIFF(expiredate,CURDATE())/30 < -6;
+-- 8.	查詢每個產地價格最低的食物名稱、到期日和價格
+SELECT name,expiredate,price
+FROM food f 
+WHERE price IN (SELECT MIN(price)
+                 FROM food
+                 GROUP BY placeid
+                 HAVING placeid = f.placeid);
+-- 9.	查詢每個種類的食物價格最高者的食物名稱和價格
+SELECT 	name,price
+    FROM food f
+    WHERE price IN (SELECT MAX(price)
+                    FROM food
+                    GROUP BY catelog
+                    HAVING catelog = f.catelog);
+-- 10.	查詢所有種類不是'點心'但比種類是'點心'貴的食物名稱、種類和價格，並以價格做降冪排序
+SELECT name,catelog,price
+FROM food
+WHERE price > ANY(SELECT price 
+				FROM food
+               WHERE catelog = '點心')
+AND catelog <>'點心'
+ORDER BY price DESC;
+-- 11.	查詢每個產地(顯示產地名稱)的食物價格最高者的食物名稱和價格
+SELECT f.name,price,p.name
+FROM food f,place p
+WHERE price IN (SELECT MAX(price) 
+               FROM food 
+			   GROUP BY placeid
+               HAVING f.placeid = p.id );
