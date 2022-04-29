@@ -137,24 +137,6 @@ FROM Store_Information;
 SELECT g.Region_Name, SUM(s.Sales) FROM Store_Information s JOIN Geography g ON s.Store_Name = g.Store_Name GROUP BY Region_Name;
 -- 8. 取得每一個區域(region_name)的總營業額與每個商店(store_name)的總營業額的百分比(store_name/region_name X 100%)
 SELECT 
-    t.Region_Name, s.Store_Name, t.sum, s.Sales/t.sum * 100
-FROM 
-    Store_Information s 
-JOIN 
-    (SELECT 
-         ANY_VALUE(s.Store_Name)`Store_Name`, Region_Name, SUM(s.Sales)`sum`
-     FROM 
-         Store_Information s 
-     JOIN 
-         Geography g 
-     ON 
-         s.Store_Name = g.Store_Name 
-     GROUP BY 
-         Region_Name)`t`
- ON 
-    s.Store_Name = t.Store_Name;
--- 或者
-SELECT 
     s.Region_Name, s.Store_Name, s.Sales/t.sum * 100
 FROM 
     (SELECT
@@ -178,7 +160,4 @@ JOIN
          Region_Name)`t`
 ON 
     s.Region_Name = t.Region_Name;
-
-
-
 
