@@ -40,7 +40,7 @@ INSERT INTO SS_Order VALUES (2019, 3104, 0);
 -- UPDATE JOIN
 -- 請將銷售明細表(Fact_Order)資料，依各部門(Dept_id)+年度統計(Year)訂單金額更新至銷售彙總表(SS_Order)
 UPDATE 
-    SS_Order s INNER 
+    SS_Order s 
 JOIN 
     (SELECT 
          DATE_FORMAT(Order_date, "%Y")`Year`, 
