@@ -119,10 +119,12 @@ WHERE a1.Store_Name IN
 (SELECT Store_Name FROM Geography a2
 WHERE a2.Store_Name = a1.Store_Name);
 -- EXISTS 用法
-SELECT SUM(Sales) FROM Store_Information
-WHERE EXISTS
-(SELECT * FROM Geography
-WHERE Region_Name = 'West');
+SELECT 
+    SUM(Sales) 
+FROM 
+    Store_Information s 
+WHERE 
+    EXISTS (SELECT Store_Name FROM Geography g WHERE s.Store_Name=g.Store_Name AND  g.Region_Name = 'West');
 -- 6. 顯示Store_Name跟Sales, 並將 'Los Angeles' 的 Sales 數值乘以 2，以及將 'San Diego' 的 Sales 數值乘以 1.5
 SELECT Store_Name, 
 CASE Store_Name
